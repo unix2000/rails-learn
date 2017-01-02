@@ -1,3 +1,491 @@
+# ruby syntax start note
+# 对象	类
+# 数值	Numeric
+# 字符串	String
+# 数组	Array
+# 散列	Hash
+# 正则表达式	Regexp
+# 文件	File
+# 符合	Symbol
+
+# 局部变量	以英文字母或者_开头
+# 全局变量	$
+# 实例变量	@
+# 类变量		@@
+# 常量			大写字母开头
+# 预留关键字  \_\_LINE\_\_  \_\_ENCODING\_\_  \_\_FILE\_\_ 等20几个关键字
+
+# && || !  and or not
+# false nil	 false
+# /zz/ === "xyzzy"	true
+# String === "xyzzy"	true
+# ((1..3) === 2)	2
+# /zz/i =~ "xyZZy"	true
+
+# times while each for until loop
+# break next redo
+# #{i} 值替换
+
+# 实例方法
+# "10,20,30".split(",")
+
+# 类方法
+# Array.new
+# File.open("some_file")
+# Time.now
+
+# 函数式方法 没有接收者的方法
+# print "hello"
+# sleep(10)
+
+# 参数个数不确定方法
+# def foo(*args)
+# 	args
+# end
+
+# **args来接收未定义的参数
+# def meth(x: 0, y: 0, z: 0, **args)
+# 	[x, y, z, args]
+# end
+# p meth(z: 4,y: 3,x: 2) #=> [2,3,4,{}]
+# p meth(x: 2, z: 3, v: 4, w: 5) #=> [2,0,3,{:v=>4,:w=>5}]
+
+# class
+# BasicObject->Object
+# ary = []
+# str = "hello liner"
+# p ary.instance_of?(Array)		#=> true
+# p str.instance_of?(String)	#=> true
+# p ary.instance_of?(String)	#=> false
+# p str.instance_of?(Array)		#=> false
+# is_a
+# p str.is_a?(String)	#=>true
+# p.str.is_a?(Object)	#=>true
+
+# 存取器定义 外部
+# attr_reader :name 只读,定义name 方法
+# attr_writer :name 只写,定义name= 方法
+# attr_accessor :name 读写,定义以上两个方法
+# class HelloWorld
+# 	def initialize
+# 	end
+	
+# 	def name
+# 		@name
+# 	end
+	
+# 	def name=(value)
+# 		@name = value
+# 	end
+# end
+
+# 方法访问级别
+# public private protected 
+# public :pub
+# private :priv
+# public 不指定时,以下的方法都指定为public
+
+# module
+# module HelloModule
+# 	Version = "1.0"
+# 	def foo
+# 		p self
+# 	end
+# 	def hello(name)
+# 		puts "Hello,#{name}."
+# 	end
+
+# 	module_function :hello #指定hello方法为模块函数
+# 	module_function :foo
+# end
+# p HelloModule::Version
+# HelloModule.hello("Liner")
+# HelloModule.foo #=>HelloModule
+# include HelloModule #包含模块
+# p Version
+# hello("Liner")
+
+# module M
+# 	def meth
+# 		"meth"
+# 	end
+# end
+# class C
+# 	include M
+# end
+# c = C.new
+# p c.meth
+# C.include?(M) #=> true
+# p C.ancestors #=> [C,M,Object,Kernel,BasicObject]
+# module M1
+# end
+# module M2
+# end
+# module M3
+# 	include M2
+# end
+# class C
+# 	include M1
+# 	include M3
+# end
+# p C.ancestors #=>[C,M3,M2,M1,Object,Kernel]
+
+# extend方法
+# module Edition
+# 	def edition(n)
+# 		"#{self} 第#{n}版"
+# 	end
+# end
+# str = "Ruby语法教程"
+# str.extend(Edition) #=>将模块Mix-in进对象
+# p str.edition(4) #=> "Ruby语法教程第4版"
+
+# 类与Mix-in
+# 接收者为类本身的方法就是类方法
+# 类方法就是类对象的实例方法
+# 	.class类的实例方法
+# 	.类对象的单例方法
+# module ClassMethods #定义类方法的模块
+# 	def cmethod
+# 		"class method"
+# 	end
+# end
+
+# module InstanceMethods #定义实例方法的模块
+# 	def imethod
+# 		"instance method"
+# 	end
+# end
+
+# class MyClass
+# 	# 使用extend方法定义类方法
+# 	extend ClassMethods
+# 	# 使用include定义实例方法
+# 	include InstanceMethods
+# end
+
+# p MyClass.cmethod #=> "class method"
+# p MyClass.new.imethod #=> "instance method"
+
+# Ruby多态简单理解: 各个对象都有自己独有的消息解释权 一个方法名属于多个对象[处理结果也不一样]
+# obj = Object.new
+# str = "liner"
+# num = Math::PI
+# p obj.to_s
+# p str.to_s
+# p num.to_s
+
+# http_get.rb
+# require "net/http"
+# require "uri"
+# url = URI.parse("http://www.ruby-lang.org/ja/")
+# http = Net::HTTP.start(url.host,url.port)
+# doc = http.get(url.path)
+# puts doc
+
+# 赋值运算符
+# &&=
+# ||=		var ||= 1		var = var || 1 只有在var为nil或false时,赋值1给它,这是给变量定义默认值的常用写法
+# ^=
+# &=
+# |=
+# <>
+# >>=
+# +=
+# -=
+# \*=
+# /=
+# %=
+# \*\*=
+
+# 不能重新定义的运算符
+# :: && || .. ... ?: not = and or
+
+# 一元运算符
+# 可定义的一元运算符有+ - ~ ! 4个,它们分别以+@ -@ ~@ !@为方法名进行方法的定义
+# 需要注意的是,一元运算符都是没有参数的
+# class Point
+# 	def +@
+# 		dup #返回自己的副本
+# 	end
+# 	def -@
+# 		self.class.new(-x,-y) #颠倒x,y各自的正负
+# 	end
+# 	def ~@
+# 		self.class.new(-y,x) #使坐标翻转90度
+# 	end
+# end
+# point = Point.new(3,6)
+# p +point #=> (3,6)
+# p -point #=> (-3,-6)
+# p ~point #=> (-6,3)
+
+# # 处理错误与异常
+# begin
+# 	可能会发生错误的处理
+# rescue => 引用异常对象的变量
+# 	发生异常时的处理
+# rescue Exception1,Exception2=>变量
+# 	对Exception1或者Exception2的处理
+# rescue Exception3=>变量
+# 	对Exception3的处理
+# ensure
+# 	不管是否发生异常都希望执行的处理
+# end
+# $! 最后发生的异常(异常对象)
+# $@ 最后发生的异常的位置信息
+# file1 = ARGV[0]
+# file2 = ARGV[1]
+# begin
+# 	io = File.open(file1)
+# rescue Errno::ENOENT,Errno::EACCES
+# 	io = File.open(file2)
+# end
+
+# 异常对象的方法
+# class 异常的种类
+# message 异常信息
+# backtrace 异常发生的位置信息($@与$!.backtrace)
+# 异常类
+# Exception
+# 	-SystemExit
+# 	-NoMemoryError
+# 	-SignalException
+# 	-ScriptError
+# 		-LoadError
+# 		-SyntaxError
+# 		-NotImplementedError
+# 	-StandardError
+# 		-RuntimeError
+# 		-SecurityError
+# 		-NameError
+# 			-NoMethodError
+# 		-IOError
+# 			-EOFError
+# 		SystemCallError
+# 			-Errno::EPERM
+# 			-Errno::ENOENT
+# 		...
+# 	...
+# 自定义异常
+# MyError = Class.new(StandardError)
+# MyError1 = Class.new(MyError)
+# class MyError < StandardError
+# end
+# 主动抛出异常
+# raise方法有以下4中调用方式
+# 	raise message
+# 	raise 异常类
+# 	raise 异常类,message
+# 	raise
+
+# Ruby块 block
+# 对象.方法名(参数列表) do |块变量|
+# 	希望循环的处理
+# end
+# 对象.方法名(参数列表) {|块变量|
+# 	希望循环的处理
+# }
+
+# 将块封装成对象
+# hello = Proc.new do |name|
+# 	puts "Hello,#{name}."
+# end
+# hello.call("world") #=> Hello,World
+# hello.call("Ruby") #=> Hello,Ruby
+
+# def total2(from,to,&block)
+# 	result = 0 #合计值
+# 	from.upto(to) do |num| #处理从from到to的值
+# 		if block #如果有块的话
+# 			result += block.call(num) #累加经过块处理的值
+# 		else
+# 			result += num #直接累加
+# 		end
+# 	end
+# 	return result #返回方法的结果
+# end
+# p total2(1,10)
+# p total2(1,10) {|num| num **2 }
+
+# def call_each(ary,&block)
+# 	ary.each(&block)
+# end
+# call_each [1,2,3] do |item|
+# 	p item
+# end
+
+# 计数
+# n.times 
+# from.upto(to)
+# from.downto(to)
+# from.step(to,step)
+
+# 数组
+# a = Array.new
+# a = Array.new(5,0)
+# 创建不包含空白的字符串数组时,可以使用%w
+# lang = %w(Ruby Perl Python Scheme Pike REBOL)
+# ["Ruby","Perl","Python","Scheme","Pike","REBOL"]
+# 创建符号(Symbol)数组的%i
+# lang = %i(Ruby Perl Python Scheme Pike REBOL)
+# [:Ruby,:Perl,:Python,:Scheme,:Pike,:REBOL]
+# num = [1,2,3]
+# even = [2,4,6]
+# p (num + even) #=>[1,2,3,2,4,6]
+# num.concat(even)
+# num<<even
+# p (num | even) #=>[1,2,3,4,6]
+# 追加元素 unshift push
+# 删除元素 shift pop
+# a.compact
+# a.compact! 删除所有nil元素
+# a.delete
+# a.delete_at
+# a.slice!(n)
+# a.slice(n..m)
+# a.slice(n,len)
+# a.uniq a.uniq!
+# 引用元素 first last
+# 替换数组元素
+# a.collect
+# a.collect!{|item|...}
+# a.map 
+# a.map!{|item|...}
+# a = [1,2,3,4,5]
+# a.collect!{|item| item*2 }
+# a.fill(0,2..3)
+# a.reverse
+# a.reverse!
+
+# 字符
+# 转义 
+# %Q \" 
+# %q \'
+# <<"EOB"
+# 字符串内容
+# EOB
+# 删除最后一个字符
+# chop chop!(破坏性的)
+# 删除换行符
+# chomp chomp!
+
+# hash散列
+# h = Hash.new
+# h.store("R","Ruby")
+# p h.fetch("R") #=> "Ruby"
+# p h.fetch("N") #=>IndexError
+# p h.keys #所有键以数组返回
+# p h.values
+# p h.to_a
+# h.key?
+# h.has_key?
+# h.include?("z")
+# h.member?("z")
+# h.value?(value)
+# h.has_value?(value)
+# h.clear
+
+# 正则表达式
+# re = Regexp.new("Ruby")
+# /^...$/ 匹配字符数为3的行
+# /abc/i =~ "ABCdef" 不包括大小写匹配
+
+# IO
+# $stdin
+# $stdout
+# $stderr
+# $stdin.tty?
+# io = File.open(file,mode)
+# io = open(file,mode)
+# ary = io.readlines
+# ary.each_line do |line|
+# 	line.chomp!
+# 	#对line进行的操作
+# end
+# IO.popen(command,mode)
+# filename = ARGV[0]
+# open("|gunzip -c #{filename}") do |io|
+# 	io.each_line do |line|
+# 		print line
+# 	end
+# end
+# open-uri库
+# rquire "open-uri"
+# #通过HTTP读取数据
+# open("http://www.ruby-lang.org") do |io|
+# 	puts io.read #将Ruby的官方网页输出到控制台
+# end
+
+#通过FTP读取数据
+# url = "ftp://www.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz"
+# open(url) do |io|
+# 	open("ruby-2.3.1.tar.gz","w") do |f| #打开本地文件
+# 		f.write(io.read)
+# 	end
+# end
+
+# Dir File 目录与文件类
+
+# FileTest模块
+# FileTest.exist?("c:\\windows-version.txts")
+# file?(path)
+# directory?(path)
+# owned?(path)
+# readable?(path)
+# writable?(path)
+# executable?(path)
+# size(path)
+# size?(path)
+# zero?(path)
+
+# find库
+# require 'find'
+# IGNORES = [ /^\./, /^CVS$/, /^RCS$/ ]
+# def listdir(top)
+# 	Find.find(top) do |path|
+# 		if FileTest.directory?(path) #如果path是目录
+# 			dir, base = File.split(path)
+# 			IGNORES.each do |re|
+# 				if re =~ base #需要忽略的目录
+# 					Find.prune #忽略该目录下的内容的查找
+# 				end
+# 			end
+# 			puts path #输出结果
+# 		end
+# 	end
+# end
+
+#fileutils库
+# FileUtils.cp(from,to)
+# FileUtils.cp_r(from,to)
+# FileUtils.mv(from,to)
+# FileUtils.rm(path)
+# FileUtils.rm_f(path)
+# FileUtils.compare(from,to)
+# FileUtils.mkdir("foo/bar")
+
+# 编码encoding
+# puts a.encoding
+
+# Time Date
+# Time.now
+
+# Proc类
+# Proc就是使块对象化的类
+# Proc.new Proc等有另外一种写法叫lambda
+# prc1 = Proc.new do |a,b,c|
+# 	p [a, b, c]
+# end
+# prc1.call(1,2) #=>[1, 2, nil]
+# prc2 = lambda do |a, b, c|
+# 	p [a, b, c]
+# end
+# prc2.call(1,2) #=> 错误(ArgumentError)
+
+# 块注释
+# (=begin =end)
+
 =begin
 for x in 1..10
 	for y in 1..x 

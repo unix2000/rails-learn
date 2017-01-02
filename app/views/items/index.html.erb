@@ -21,6 +21,7 @@
     </div>
   </div>
   <div class="digg_pagination">
-    <%= will_paginate @items, :container => false %>
+    <%#= will_paginate @items, :container => true %>
+    <%= paginate @items, :window => 2 %>
   </div>
  </div>

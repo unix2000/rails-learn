@@ -1,11 +1,11 @@
 class Api::V1::BaseController < ApplicationController
-	#include Pundit #这里Pundit貌似有问题,载入后报错内容不符合预期
-  #
-	# rescue_from Pundit::NotAuthorizedError, with: :deny_access
-  #
-	# def deny_access
-	# 	api_error(status: 403)
-	# end
+	# respond_to? :json
+	include Pundit #这里Pundit貌似有问题,载入后报错内容不符合预期
+	rescue_from Pundit::NotAuthorizedError, with: :deny_access
+	attr_accessor :current_user
+	def deny_access
+		api_error(status: 403)
+	end
 	# disable the CSRF token
 	protect_from_forgery with: :null_session
 
@@ -35,6 +35,12 @@ class Api::V1::BaseController < ApplicationController
 		api_error(status: 401)
 	end
 
-	attr_accessor :current_user
+	def paginate(resource)
+    resource = resource.page(params[:page] || 1)
+    if params[:per_page]
+      resource = resource.per(params[:per_page])
+    end
+    return resource
+	end
 
 end
